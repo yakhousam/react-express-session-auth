@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 
+const baseUrl = "https://544a-105-235-135-47.ngrok.io";
+// const baseUrl = "http://localhost:3001";
+
 function App() {
   const [username, setUsername] = useState("yakhousam");
   const [password, setPassword] = useState("123456");
@@ -16,7 +19,7 @@ function App() {
     setError("");
     setIslogin("");
     setGreeting("");
-    fetch("http://localhost:3001/login", {
+    fetch(`${baseUrl}/login`, {
       credentials: "include",
       method: "POST",
       headers: {
@@ -34,7 +37,7 @@ function App() {
       .catch((e) => setError(e.message));
   };
   const handleGreeting = () => {
-    fetch("http://localhost:3001/greeting", { credentials: "include" })
+    fetch(`${baseUrl}/greeting`, { credentials: "include" })
       .then((res) => {
         return res.json();
       })
@@ -42,7 +45,7 @@ function App() {
       .catch(console.error);
   };
   const handleLogout = () => {
-    fetch("http://localhost:3001/logout", {
+    fetch(`${baseUrl}/logout`, {
       method: "POST",
       credentials: "include",
     })
@@ -50,7 +53,7 @@ function App() {
       .catch(console.error);
   };
   useEffect(() => {
-    fetch("http://localhost:3001/islogedin", { credentials: "include" })
+    fetch(`${baseUrl}/islogedin`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         if (data.isLoggedIn) {
@@ -59,7 +62,7 @@ function App() {
       })
       .catch((e) => {
         console.error(e);
-        setError(e);
+        setError("something went wrong");
       })
       .finally(() => {
         setIsFetching(false);

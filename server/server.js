@@ -7,6 +7,7 @@ const session = require("express-session");
 const app = express();
 const port = process.env.PORT || 3001;
 const production = process.env.NODE_ENV === "production";
+// const production = true;
 
 const users = [
   { id: "1", username: "yakhousam", password: "123456" },
@@ -44,8 +45,8 @@ app.use(
   session({
     secret: "keyboard cat",
     cookie: {
-      secure: production,
-      httpOnly: production,
+      secure: false,
+      httpOnly: false,
     },
     resave: false,
     saveUninitialized: true,
@@ -54,7 +55,10 @@ app.use(
 app.use(express.json());
 app.use(
   cors({
-    origin: process.env.ORIGIN || ["http://localhost:3000"],
+    origin: process.env.ORIGIN || [
+      "http://localhost:3000",
+      "http://b544-105-235-136-77.ngrok.io",
+    ],
     credentials: true,
   })
 );
@@ -62,6 +66,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.post("/login", passport.authenticate("local"), (req, res) => {
+  console.log("login session id=", req.sessionID);
   res.json({ message: "login success", user: req.user });
 });
 
@@ -74,6 +79,7 @@ app.post("/logout", (req, res) => {
 });
 
 function isAuthenticated(req, res, next) {
+  console.log("is auth session id=", req.sessionID);
   if (!req.isAuthenticated()) {
     return res.status(403).json({ message: "not authorized" });
   }
