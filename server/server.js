@@ -6,6 +6,7 @@ const session = require("express-session");
 
 const app = express();
 const port = process.env.PORT || 3001;
+const production = process.env.NODE_ENV === "production";
 
 const users = [
   { id: "1", username: "yakhousam", password: "123456" },
@@ -14,7 +15,6 @@ const users = [
 
 passport.use(
   new Strategy(function (username, password, done) {
-    console.log(username, password);
     const user = users.find(
       (user) => user.username === username && user.password === password
     );
@@ -44,7 +44,8 @@ app.use(
   session({
     secret: "keyboard cat",
     cookie: {
-      secure: false,
+      secure: production,
+      httpOnly: production,
     },
     resave: false,
     saveUninitialized: true,
@@ -53,7 +54,7 @@ app.use(
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://cc2e-105-235-135-47.ngrok.io"],
+    origin: process.env.ORIGIN || ["http://localhost:3000"],
     credentials: true,
   })
 );
