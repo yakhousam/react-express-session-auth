@@ -67,6 +67,10 @@ app.post("/login", passport.authenticate("local"), (req, res) => {
 app.get("/islogedin", (req, res) => {
   res.json({ isLoggedIn: req.isAuthenticated() });
 });
+app.post("/logout", (req, res) => {
+  req.logout();
+  res.send("logout");
+});
 
 function isAuthenticated(req, res, next) {
   if (!req.isAuthenticated()) {
